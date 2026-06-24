@@ -10,20 +10,13 @@
 <POSTINSTALL>
 <INLINE>
 mkdir -p /boot/config/plugins/PlayniteNASyncUnraidPlugin
-echo "----------------------------------------------------"
-echo " PlayniteNASyncUnraidPlugin Mark 1 Installed Successfully."
-echo "----------------------------------------------------"
 </INLINE>
 </POSTINSTALL>
 
 <FILE Method="remove">
 <INLINE>
-<![CDATA[
-echo "Uninstalling PlayniteNASyncUnraidPlugin..."
 rm -rf /usr/local/emhttp/plugins/PlayniteNASyncUnraidPlugin
 rm -f /tmp/PlayniteNASyncUnraidPlugin.txz
-echo "Plugin successfully removed."
-]]>
 </INLINE>
 </FILE>
 
