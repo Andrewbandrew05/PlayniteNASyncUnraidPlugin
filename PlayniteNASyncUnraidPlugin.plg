@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE PLUGIN>
-<PLUGIN>
+<!DOCTYPE PLUGIN [
+  <!ENTITY name      "PlayniteNASyncUnraidPlugin">
+  <!ENTITY author    "Andrew">
+  <!ENTITY version   "2026.06.24">
+  <!ENTITY pluginURL "https://raw.githubusercontent.com/Andrewbandrew05/PlayniteNASyncUnraidPlugin/main/PlayniteNASyncUnraidPlugin.plg">
+]>
 
-<NAME>PlayniteNASyncUnraidPlugin</NAME>
-<AUTHOR>Andrew</AUTHOR>
-<VERSION>2026.06.24</VERSION>
-<CATEGORY>Tools</CATEGORY>
-<PLUGINURL>https://raw.githubusercontent.com/Andrewbandrew05/PlayniteNASyncUnraidPlugin/main/PlayniteNASyncUnraidPlugin.plg</PLUGINURL>
+<PLUGIN name="&name;" author="&author;" version="&version;" pluginURL="&pluginURL;" min="6.9.0">
 
 <SHORTDESC>Mark 1 configuration panel for Playnite storage synchronization.</SHORTDESC>
 
@@ -17,7 +17,9 @@
 <POSTINSTALL>
 <INLINE>
 mkdir -p /boot/config/plugins/PlayniteNASyncUnraidPlugin
-echo "PlayniteNASyncUnraidPlugin Mark 1 Installed Successfully."
+echo "----------------------------------------------------"
+echo " PlayniteNASyncUnraidPlugin Mark 1 Installed Successfully."
+echo "----------------------------------------------------"
 </INLINE>
 </POSTINSTALL>
 
