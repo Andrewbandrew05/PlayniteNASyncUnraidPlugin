@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE PLUGIN [
-  <!ENTITY name      "PlayniteNASyncUnraidPlugin">
-  <!ENTITY author    "Andrew">
-  <!ENTITY version   "2026.06.24">
-  <!ENTITY pluginURL "https://raw.githubusercontent.com/Andrewbandrew05/PlayniteNASyncUnraidPlugin/main/PlayniteNASyncUnraidPlugin.plg">
-]>
-
-<PLUGIN name="&name;" author="&author;" version="&version;" pluginURL="&pluginURL;" min="6.9.0">
+<PLUGIN name="PlayniteNASyncUnraidPlugin" author="Andrew" version="2026.06.24" pluginURL="https://raw.githubusercontent.com/Andrewbandrew05/PlayniteNASyncUnraidPlugin/main/PlayniteNASyncUnraidPlugin.plg" min="6.9.0">
 
 <SHORTDESC>Mark 1 configuration panel for Playnite storage synchronization.</SHORTDESC>
 
