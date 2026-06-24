@@ -2,25 +2,34 @@
 <!DOCTYPE PLUGIN>
 <PLUGIN>
 
-<NAME>PlayniteNasSyncUnraidPlugin</NAME>
-<AUTHOR>Andrew Rissler</AUTHOR>
-<VERSION>1.0.0</VERSION>
-<SHORTDESC>A brief description of your plugin.</SHORTDESC>
-<LONGDESC>A longer description of what your plugin does.</LONGDESC>
-<CATEGORY>Utilities</CATEGORY>
-<MIN>6.12.0</MIN>
+<NAME>PlayniteNASyncUnraidPlugin</NAME>
+<AUTHOR>Andrew</AUTHOR>
+<VERSION>2026.06.24</VERSION>
+<CATEGORY>Tools</CATEGORY>
+<PLUGINURL>https://raw.githubusercontent.com/Andrewbandrew05/PlayniteNASyncUnraidPlugin/main/PlayniteNASyncUnraidPlugin.plg</PLUGINURL>
 
-<FILE Name="/tmp/myplugin-1.0.0.txz" Run="upgradepkg --install-new">
-  <URL>https://github.com/Andrewbandrew05/PlayniteNasSyncUnraidPlugin.git</URL>
+<SHORTDESC>Mark 1 configuration panel for Playnite storage synchronization.</SHORTDESC>
+
+<FILE Name="/tmp/PlayniteNASyncUnraidPlugin.txz" Run="upgradepkg --install-new">
+  <URL>https://github.com/Andrewbandrew05/PlayniteNASyncUnraidPlugin/raw/main/archive/PlayniteNASyncUnraidPlugin.txz</URL>
 </FILE>
 
 <POSTINSTALL>
+<INLINE>
+mkdir -p /boot/config/plugins/PlayniteNASyncUnraidPlugin
+echo "PlayniteNASyncUnraidPlugin Mark 1 Installed Successfully."
+</INLINE>
 </POSTINSTALL>
 
-<CLEANUP>
-  <RUN>
-    rm -f /tmp/myplugin-1.0.0.txz
-  </RUN>
-</CLEANUP>
+<FILE Method="remove">
+<INLINE>
+<![CDATA[
+echo "Uninstalling PlayniteNASyncUnraidPlugin..."
+rm -rf /usr/local/emhttp/plugins/PlayniteNASyncUnraidPlugin
+rm -f /tmp/PlayniteNASyncUnraidPlugin.txz
+echo "Plugin successfully removed."
+]]>
+</INLINE>
+</FILE>
 
 </PLUGIN>

@@ -1,0 +1,47 @@
+Menu="Utilities"
+Title="Playnite NASync"
+Icon="settings"
+---
+<?php
+// Pull existing configurations if they exist
+$plugin_config = parse_ini_file("/boot/config/plugins/PlayniteNASyncUnraidPlugin/settings.cfg");
+$current_share = $plugin_config['TARGET_SHARE'] ?? '';
+$current_password = $plugin_config['PASSWORD'] ?? '';
+
+// Handle saving when the user clicks 'Apply'
+if ($_POST['submit'] == "Apply") {
+    $target_share = $_POST['target_share'];
+    $password = $_POST['password'];
+    
+    // Create the directory on the flash drive if it doesn't exist
+    exec("mkdir -p /boot/config/plugins/PlayniteNASyncUnraidPlugin");
+    
+    // Save to a simple config file
+    $cfg_content = "TARGET_SHARE=\"$target_share\"\nPASSWORD=\"$password\"\n";
+    file_put_contents("/boot/config/plugins/PlayniteNASyncUnraidPlugin/settings.cfg", $cfg_content);
+    
+    // Refresh local variables for immediate display
+    $current_share = $target_share;
+    $current_password = $password;
+}
+?>
+
+<form markdown="1" method="POST" action="/Settings/PlayniteNASync">
+
+### Current Configuration
+* **Configured Target Share:** `<?=htmlspecialchars($current_share)?>`
+* **Configured Password:** `<?=htmlspecialchars($current_password)?>`
+
+---
+
+### Modify Settings
+
+Target Share Name:
+: <input type="text" name="target_share" value="<?=htmlspecialchars($current_share)?>" placeholder="e.g., games_share">
+
+Password:
+: <input type="password" name="password" value="<?=htmlspecialchars($current_password)?>">
+
+&nbsp;
+: <input type="submit" name="submit" value="Apply">
+</form>
