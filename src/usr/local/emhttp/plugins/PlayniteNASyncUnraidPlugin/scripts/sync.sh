@@ -12,3 +12,6 @@ echo "Destination: Processing targets..."
 echo ""
 echo "Sync completed successfully!"
 echo "=========================================="
+
+# Test file write
+echo "Script executed at $(date)" >> /tmp/playnite_sync_test.log
