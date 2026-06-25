@@ -1,23 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PLUGIN name="PlayniteNASyncUnraidPlugin" author="Andrew" version="2026.06.24" pluginURL="https://raw.githubusercontent.com/Andrewbandrew05/PlayniteNASyncUnraidPlugin/main/PlayniteNASyncUnraidPlugin.plg" min="6.9.0">
+<!DOCTYPE PLUGIN>
+<PLUGIN>
 
-<SHORTDESC>Mark 1 configuration panel for Playnite storage synchronization.</SHORTDESC>
+  <NAME>PlayniteNASyncUnraidPlugin</NAME>
+  <AUTHOR>Andrew</AUTHOR>
+  <VERSION>2026.06.24</VERSION>
+  <SHORTDESC>Mark 1 configuration panel for Playnite storage synchronization.</SHORTDESC>
+  <CATEGORY>Utilities</CATEGORY>
+  <MIN>6.9.0</MIN>
 
-<FILE Name="/tmp/PlayniteNASyncUnraidPlugin.txz" Run="upgradepkg --install-new">
-  <URL>https://github.com/Andrewbandrew05/PlayniteNASyncUnraidPlugin/raw/main/archive/PlayniteNASyncUnraidPlugin.txz</URL>
-</FILE>
+  <FILE Name="/tmp/PlayniteNASyncUnraidPlugin.txz" Run="upgradepkg --install-new">
+    <URL>https://github.com/Andrewbandrew05/PlayniteNASyncUnraidPlugin/raw/main/archive/PlayniteNASyncUnraidPlugin.txz</URL>
+  </FILE>
 
-<POSTINSTALL>
-<INLINE>
-mkdir -p /boot/config/plugins/PlayniteNASyncUnraidPlugin
-</INLINE>
-</POSTINSTALL>
+  <POSTINSTALL>
+    <INLINE>
+      mkdir -p /boot/config/plugins/PlayniteNASyncUnraidPlugin
+    </INLINE>
+  </POSTINSTALL>
 
-<FILE Method="remove">
-<INLINE>
-rm -rf /usr/local/emhttp/plugins/PlayniteNASyncUnraidPlugin
-rm -f /tmp/PlayniteNASyncUnraidPlugin.txz
-</INLINE>
-</FILE>
+  <FILE Method="remove">
+    <INLINE>
+      rm -rf /usr/local/emhttp/plugins/PlayniteNASyncUnraidPlugin
+      rm -f /tmp/PlayniteNASyncUnraidPlugin.txz
+    </INLINE>
+  </FILE>
 
 </PLUGIN>
