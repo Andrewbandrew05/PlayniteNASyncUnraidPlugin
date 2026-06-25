@@ -1,40 +1,52 @@
 $PluginName = "PlayniteNASyncUnraidPlugin"
 
-# Adjust this if your structure changes
 $Source = ".\src\usr\local\emhttp\plugins\$PluginName"
-
 $ArchiveDir = ".\archive"
-New-Item -ItemType Directory -Force -Path $ArchiveDir | Out-Null
-
 $BuildDir = "$env:TEMP\$PluginName-build"
 $Output = "$ArchiveDir\$PluginName.txz"
 
-Write-Host "[BUILD] Cleaning build folder..."
+# Ensure clean output folder
+New-Item -ItemType Directory -Force -Path $ArchiveDir | Out-Null
+
+Write-Host "[BUILD] Cleaning..."
 Remove-Item -Recurse -Force $BuildDir -ErrorAction SilentlyContinue
 Remove-Item -Force $Output -ErrorAction SilentlyContinue
 
-Write-Host "[BUILD] Creating directory structure..."
-New-Item -ItemType Directory -Force -Path "$BuildDir\usr\local\emhttp\plugins\$PluginName" | Out-Null
-
 if (!(Test-Path $Source)) {
-    Write-Host "[ERROR] Source path not found:"
-    Write-Host $Source
+    Write-Host "[ERROR] Missing source folder: $Source"
     exit 1
 }
 
-Write-Host "[BUILD] Copying files..."
-Copy-Item -Recurse "$Source\*" "$BuildDir\usr\local\emhttp\plugins\$PluginName\"
+Write-Host "[BUILD] Creating structure..."
+New-Item -ItemType Directory -Force `
+    -Path "$BuildDir\usr\local\emhttp\plugins\$PluginName" | Out-Null
 
-Write-Host "[BUILD] Fixing line endings..."
-Get-ChildItem -Recurse $BuildDir -Include *.page,*.php,*.txt,*.cfg | ForEach-Object {
-    $content = Get-Content $_.FullName -Raw
-    $content = $content -replace "^\uFEFF", ""
-    $content = $content -replace "`r`n", "`n"
-    Set-Content -NoNewline -Encoding UTF8 $_.FullName $content
+Write-Host "[BUILD] Copying files..."
+Copy-Item -Recurse "$Source\*" `
+    "$BuildDir\usr\local\emhttp\plugins\$PluginName\"
+
+Write-Host "[BUILD] Fixing encoding (FORCE UTF-8 no BOM)..."
+
+Get-ChildItem -Recurse $BuildDir -File | ForEach-Object {
+
+    $path = $_.FullName
+
+    # Read raw text
+    $text = Get-Content $path -Raw
+
+    # Remove BOM if it sneaks in
+    $text = $text -replace "^\uFEFF", ""
+
+    # Normalize line endings
+    $text = $text -replace "`r`n", "`n"
+
+    # Rewrite as UTF-8 WITHOUT BOM (this is the key fix)
+    $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+    [System.IO.File]::WriteAllText($path, $text, $utf8NoBom)
 }
 
-Write-Host "[BUILD] Creating TXZ package..."
+Write-Host "[BUILD] Creating TXZ..."
 tar -cJf $Output -C $BuildDir .
 
-Write-Host "[DONE] Output:"
+Write-Host "[DONE]"
 Write-Host $Output
