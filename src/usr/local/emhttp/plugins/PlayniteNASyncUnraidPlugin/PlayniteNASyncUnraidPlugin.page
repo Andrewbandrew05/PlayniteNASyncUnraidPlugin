@@ -1,8 +1,45 @@
-Menu="Settings"
+Menu="Settings/Playnite NASync"
 Icon="cogs"
 Title="Playnite NASync"
-Type="xauth"
+
 ---
-<?
-include("/usr/local/emhttp/plugins/PlayniteNASyncUnraidPlugin/PlayniteNASyncUnraidPlugin.php");
+<?php
+
+$cfg_file = "/boot/config/plugins/PlayniteNASyncUnraidPlugin/settings.cfg";
+
+$current_share = '';
+$current_password = '';
+
+if (file_exists($cfg_file)) {
+    $plugin_config = parse_ini_file($cfg_file);
+    $current_share = $plugin_config['TARGET_SHARE'] ?? '';
+    $current_password = $plugin_config['PASSWORD'] ?? '';
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $target_share = $_POST['target_share'] ?? '';
+    $password = $_POST['password'] ?? '';
+
+    file_put_contents($cfg_file,
+        "TARGET_SHARE=\"$target_share\"\nPASSWORD=\"$password\"\n"
+    );
+
+    $current_share = $target_share;
+    $current_password = $password;
+}
+
 ?>
+
+<h2>Playnite NASync</h2>
+
+<form method="POST">
+    Target Share:
+    <input type="text" name="target_share"
+        value="<?= htmlspecialchars($current_share) ?>">
+
+    Password:
+    <input type="password" name="password"
+        value="<?= htmlspecialchars($current_password) ?>">
+
+    <input type="submit" value="Apply">
+</form>
