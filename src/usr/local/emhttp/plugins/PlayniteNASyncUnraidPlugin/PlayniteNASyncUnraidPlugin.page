@@ -3,7 +3,97 @@ Icon="cogs"
 Title="Playnite NASync"
 Type="xmenu"
 ---
-<div class="desc">
-<b>Playnite NASync Settings</b><br/>
-<i>Plugin is active and ready to configure.</i>
-</div>
+<?php
+$cfg_dir = "/boot/config/plugins/PlayniteNASyncUnraidPlugin";
+$cfg_file = "$cfg_dir/settings.cfg";
+
+// Create config directory if needed
+if (!is_dir($cfg_dir)) {
+    @mkdir($cfg_dir, 0755, true);
+}
+
+// Load existing settings
+$settings = [
+    'password' => '',
+    'share1' => '',
+    'share2' => '',
+    'enabled' => 'no'
+];
+
+if (file_exists($cfg_file)) {
+    $loaded = parse_ini_file($cfg_file);
+    $settings = array_merge($settings, $loaded);
+}
+
+$message = '';
+$msg_type = '';
+
+// Handle form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $settings['password'] = $_POST['password'] ?? '';
+    $settings['share1'] = $_POST['share1'] ?? '';
+    $settings['share2'] = $_POST['share2'] ?? '';
+    $settings['enabled'] = $_POST['enabled'] ?? 'no';
+    
+    // Save to INI file
+    $ini_content = "";
+    foreach ($settings as $key => $value) {
+        $ini_content .= $key . " = \"" . str_replace('"', '\\"', $value) . "\"\n";
+    }
+    
+    if (file_put_contents($cfg_file, $ini_content) !== false) {
+        @chmod($cfg_file, 0600);
+        $message = 'Settings saved successfully!';
+        $msg_type = 'success';
+    } else {
+        $message = 'Error saving settings!';
+        $msg_type = 'error';
+    }
+}
+?>
+
+<style>
+.form-group { margin: 15px 0; }
+.form-group label { display: block; font-weight: bold; margin-bottom: 5px; }
+.form-group input[type="text"],
+.form-group input[type="password"] { width: 100%; max-width: 400px; padding: 8px; }
+.checkbox-group { margin: 15px 0; }
+.checkbox-group input[type="checkbox"] { margin-right: 10px; }
+.submit-btn { padding: 10px 20px; background-color: #0066cc; color: white; border: none; cursor: pointer; border-radius: 4px; }
+.submit-btn:hover { background-color: #0052a3; }
+.message { padding: 10px; margin-bottom: 15px; border-radius: 4px; }
+.message.success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+.message.error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+</style>
+
+<h2>Playnite NASync Settings</h2>
+
+<?php if ($message): ?>
+    <div class="message <?php echo $msg_type; ?>">
+        <?php echo htmlspecialchars($message, ENT_QUOTES); ?>
+    </div>
+<?php endif; ?>
+
+<form method="POST">
+    <div class="form-group">
+        <label for="password">Secret Password:</label>
+        <input type="password" id="password" name="password" value="<?php echo htmlspecialchars($settings['password'], ENT_QUOTES); ?>" placeholder="Enter secret password">
+    </div>
+    
+    <div class="form-group">
+        <label for="share1">Share Target 1:</label>
+        <input type="text" id="share1" name="share1" value="<?php echo htmlspecialchars($settings['share1'], ENT_QUOTES); ?>" placeholder="e.g., /mnt/disk1/media">
+    </div>
+    
+    <div class="form-group">
+        <label for="share2">Share Target 2:</label>
+        <input type="text" id="share2" name="share2" value="<?php echo htmlspecialchars($settings['share2'], ENT_QUOTES); ?>" placeholder="e.g., /mnt/disk2/backup">
+    </div>
+    
+    <div class="checkbox-group">
+        <input type="checkbox" id="enabled" name="enabled" value="yes" <?php echo $settings['enabled'] === 'yes' ? 'checked' : ''; ?>>
+        <label for="enabled">Enable Plugin</label>
+    </div>
+    
+    <button type="submit" class="submit-btn">Save Settings</button>
+</form>
