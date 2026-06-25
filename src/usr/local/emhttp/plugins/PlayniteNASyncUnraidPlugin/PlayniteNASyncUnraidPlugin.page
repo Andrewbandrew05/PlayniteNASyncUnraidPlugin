@@ -1,7 +1,7 @@
 Menu="Settings/Playnite NASync"
 Icon="cogs"
 Title="Playnite NASync"
-
+Type="xmenu"
 ---
 <?php
 
