@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE PLUGIN>
-<PLUGIN name="PlayniteNASyncUnraidPlugin" version="1.0.2" pluginURL="https://raw.githubusercontent.com/Andrewbandrew05/PlayniteNASyncUnraidPlugin/main/PlayniteNASyncUnraidPlugin.plg">
+<PLUGIN name="PlayniteNASyncUnraidPlugin" version="1.0.3" pluginURL="https://raw.githubusercontent.com/Andrewbandrew05/PlayniteNASyncUnraidPlugin/main/PlayniteNASyncUnraidPlugin.plg">
   <NAME>PlayniteNASyncUnraidPlugin</NAME>
   <AUTHOR>Andrew</AUTHOR>
-  <VERSION>1.0.2</VERSION>
+  <VERSION>1.0.3</VERSION>
   <SHORTDESC>Playnite NASync plugin for Unraid settings.</SHORTDESC>
   <LONGDESC>Provides a simple settings page for target share and password.</LONGDESC>
   <CATEGORY>Utilities</CATEGORY>
@@ -16,22 +16,13 @@
   <POSTINSTALL>
   <INLINE>
     mkdir -p /boot/config/plugins/PlayniteNASyncUnraidPlugin
-    mkdir -p /var/local/emhttp/plugins/PlayniteNASyncUnraidPlugin
-    cp -R /usr/local/emhttp/plugins/PlayniteNASyncUnraidPlugin/* /var/local/emhttp/plugins/PlayniteNASyncUnraidPlugin/ 2>/dev/null
   </INLINE>
   </POSTINSTALL>
-
-  <FILE Name="/usr/local/emhttp/plugins/PlayniteNASyncUnraidPlugin/install" Run="/bin/bash">
-  <INLINE>
-    mkdir -p /var/local/emhttp/plugins/PlayniteNASyncUnraidPlugin
-    cp -R /usr/local/emhttp/plugins/PlayniteNASyncUnraidPlugin/* /var/local/emhttp/plugins/PlayniteNASyncUnraidPlugin/ 2>/dev/null
-  </INLINE>
-  </FILE>
 
   <FILE Method="remove">
   <INLINE>
     rm -rf /usr/local/emhttp/plugins/PlayniteNASyncUnraidPlugin
-    rm -rf /var/local/emhttp/plugins/PlayniteNASyncUnraidPlugin
+    rm -rf /boot/config/plugins/PlayniteNASyncUnraidPlugin
     rm -f /tmp/PlayniteNASyncUnraidPlugin.txz
   </INLINE>
   </FILE>
