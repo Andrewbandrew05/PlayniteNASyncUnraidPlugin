@@ -56,12 +56,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Execute bash script
             $script = '/usr/local/emhttp/plugins/PlayniteNASyncUnraidPlugin/scripts/sync.sh';
             if (file_exists($script)) {
+                // Make sure script is executable
+                @chmod($script, 0755);
                 $output = shell_exec('bash ' . escapeshellarg($script) . ' 2>&1');
-                $script_output = $output;
-                $message = 'Script executed successfully!';
-                $msg_type = 'success';
+                if ($output === null) {
+                    $script_output = "Error: Unable to execute script. Check permissions.";
+                    $message = 'Script execution failed!';
+                    $msg_type = 'error';
+                } else {
+                    $script_output = $output;
+                    $message = 'Script executed successfully!';
+                    $msg_type = 'success';
+                }
             } else {
-                $message = 'Script not found!';
+                $message = 'Script not found at: ' . $script;
                 $msg_type = 'error';
             }
         }
@@ -123,14 +131,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 </form>
 
-<form method="POST" style="margin-top: 30px;">
+<hr style="margin: 30px 0;">
+
+<h3>Sync Script</h3>
+<form method="POST">
     <input type="hidden" name="action" value="execute">
     <button type="submit" class="execute-btn">Run Sync Script</button>
 </form>
 
 <?php if ($script_output): ?>
-    <div class="output-box">
-        <strong>Script Output:</strong><br/>
-        <?php echo htmlspecialchars($script_output, ENT_QUOTES); ?>
+    <div style="margin-top: 20px;">
+        <h4>Output:</h4>
+        <textarea style="width: 100%; height: 200px; padding: 10px; font-family: monospace; background: #f5f5f5; border: 1px solid #ddd; border-radius: 4px;" readonly><?php echo htmlspecialchars($script_output, ENT_QUOTES); ?></textarea>
     </div>
 <?php endif; ?>
