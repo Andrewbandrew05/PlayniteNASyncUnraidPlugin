@@ -17,10 +17,18 @@ if (!(Test-Path $Source)) {
 }
 
 Write-Host "[BUILD] Creating structure..."
-New-Item -ItemType Directory -Force -Path "$BuildDir\usr\local\emhttp\plugins\$PluginName" | Out-Null
+New-Item -ItemType Directory -Force -Path "$BuildDir\usr\local\emhttp\plugins" | Out-Null
 
 Write-Host "[BUILD] Copying files..."
-Copy-Item -Recurse "$Source\*" "$BuildDir\usr\local\emhttp\plugins\$PluginName\"
+# Copy .page file directly to plugins directory
+if (Test-Path "$Source\$PluginName.page") {
+    Copy-Item "$Source\$PluginName.page" "$BuildDir\usr\local\emhttp\plugins\$PluginName.page"
+}
+# Copy other files to plugin subdirectory if they exist
+if ((Get-ChildItem "$Source" -Exclude "*.page").Count -gt 0) {
+    New-Item -ItemType Directory -Force -Path "$BuildDir\usr\local\emhttp\plugins\$PluginName" | Out-Null
+    Get-ChildItem "$Source" -Exclude "*.page" | Copy-Item -Destination "$BuildDir\usr\local\emhttp\plugins\$PluginName\" -Recurse
+}
 
 Write-Host "[BUILD] Fixing encoding (FORCE UTF-8 no BOM)..."
 $files = @(Get-ChildItem -Recurse $BuildDir -File)
