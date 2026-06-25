@@ -8,68 +8,37 @@
 
 <PLUGIN name="&name;" author="&author;" version="&version;" pluginURL="&pluginURL;" min="6.9.0">
 
-<SHORTDESC>Playnite NASync configuration panel</SHORTDESC>
+<SHORTDESC>
+Mark 1 configuration panel for Playnite storage synchronization.
+</SHORTDESC>
 
-<!-- Install package -->
-<FILE Name="/tmp/&name;.txz" Run="upgradepkg --install-new">
-  <URL>https://github.com/Andrewbandrew05/PlayniteNASyncUnraidPlugin/raw/main/archive/PlayniteNASyncUnraidPlugin.txz</URL>
+<!-- Download and install package -->
+<FILE Name="/tmp/&name;.txz" Run="installpkg">
+  <URL>
+https://github.com/Andrewbandrew05/PlayniteNASyncUnraidPlugin/raw/main/archive/PlayniteNASyncUnraidPlugin.txz
+  </URL>
 </FILE>
 
-<!-- IMPORTANT: ensure plugin is registered in emhttp BEFORE UI loads -->
-<FILE Name="/usr/local/emhttp/plugins/&name;/PlayniteNASyncUnraidPlugin.page">
-  <INLINE>
-Menu="Settings/Playnite NASync"
-Icon="cogs"
-Title="Playnite NASync"
-Type="xmenu"
----
-<?php
-
-$cfg_file = "/boot/config/plugins/PlayniteNASyncUnraidPlugin/settings.cfg";
-
-$current_share = '';
-$current_password = '';
-
-if (file_exists($cfg_file)) {
-    $plugin_config = parse_ini_file($cfg_file);
-    $current_share = $plugin_config['TARGET_SHARE'] ?? '';
-    $current_password = $plugin_config['PASSWORD'] ?? '';
-}
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $target_share = $_POST['target_share'] ?? '';
-    $password = $_POST['password'] ?? '';
-
-    file_put_contents($cfg_file,
-        "TARGET_SHARE=\"$target_share\"\nPASSWORD=\"$password\"\n"
-    );
-
-    header("Location: " . $_SERVER['REQUEST_URI']);
-    exit;
-}
-
-?>
-
-<h2>Playnite NASync</h2>
-
-<form method="POST">
-    Target Share:
-    <input type="text" name="target_share"
-        value="<?= htmlspecialchars($current_share) ?>">
-
-    Password:
-    <input type="password" name="password"
-        value="<?= htmlspecialchars($current_password) ?>">
-
-    <input type="submit" value="Apply">
-</form>
-  </INLINE>
+<!-- Ensure WebGUI plugin directory exists -->
+<FILE Name="/var/local/emhttp/plugins/&name;/">
+<INLINE>
+mkdir -p /var/local/emhttp/plugins/&name;
+</INLINE>
 </FILE>
 
-<!-- Clean removal -->
+<!-- Copy plugin UI into WebGUI runtime so Settings menu picks it up -->
+<FILE Name="/var/local/emhttp/plugins/&name;/install" Run="/bin/bash">
+<INLINE>
+mkdir -p /var/local/emhttp/plugins/&name;
+cp -R /usr/local/emhttp/plugins/&name;/* /var/local/emhttp/plugins/&name;/ 2>/dev/null
+</INLINE>
+</FILE>
+
+<!-- Cleanup on removal -->
 <FILE Method="remove">
 <INLINE>
 rm -rf /usr/local/emhttp/plugins/&name;
+rm -rf /var/local/emhttp/plugins/&name;
 rm -f /tmp/&name;.txz
 </INLINE>
 </FILE>
