@@ -1,6 +1,6 @@
-Menu="Settings/Playnite NASync"
+Menu="PlayniteNASyncUnraidPlugin"
 Icon="cogs"
-Title="Playnite NASync"
+Title="Settings"
 Type="xmenu"
 ---
 <?php
