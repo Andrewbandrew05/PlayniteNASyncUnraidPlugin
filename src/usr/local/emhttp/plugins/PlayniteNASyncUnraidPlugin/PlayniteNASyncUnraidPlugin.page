@@ -53,25 +53,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $msg_type = 'error';
             }
         } elseif ($_POST['action'] === 'execute') {
-            // Execute bash script
             $script = '/usr/local/emhttp/plugins/PlayniteNASyncUnraidPlugin/scripts/sync.sh';
-            if (file_exists($script)) {
-                // Make sure script is executable
-                @chmod($script, 0755);
-                $output = shell_exec('bash ' . escapeshellarg($script) . ' 2>&1');
-                if ($output === null) {
-                    $script_output = "Error: Unable to execute script. Check permissions.";
-                    $message = 'Script execution failed!';
-                    $msg_type = 'error';
-                } else {
-                    $script_output = $output;
-                    $message = 'Script executed successfully!';
-                    $msg_type = 'success';
-                }
-            } else {
-                $message = 'Script not found at: ' . $script;
-                $msg_type = 'error';
-            }
+            $output = shell_exec($script . ' 2>&1');
+            $script_output = $output;
         }
     }
 }
