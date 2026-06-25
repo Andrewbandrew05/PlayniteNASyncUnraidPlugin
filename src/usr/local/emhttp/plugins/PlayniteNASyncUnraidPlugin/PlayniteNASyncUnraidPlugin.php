@@ -1,8 +1,3 @@
-Menu="Settings"
-Icon="cogs"
-Title="Playnite NASync"
-Type="xauth"
----
 <?php
 $cfg_file = "/boot/config/plugins/PlayniteNASyncUnraidPlugin/settings.cfg";
 $current_share = '';

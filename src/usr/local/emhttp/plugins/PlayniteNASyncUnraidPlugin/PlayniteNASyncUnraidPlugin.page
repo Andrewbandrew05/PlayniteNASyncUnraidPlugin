@@ -1,0 +1,8 @@
+Menu="Settings"
+Icon="cogs"
+Title="Playnite NASync"
+Type="xauth"
+---
+<?
+include("/usr/local/emhttp/plugins/PlayniteNASyncUnraidPlugin/PlayniteNASyncUnraidPlugin.php");
+?>
