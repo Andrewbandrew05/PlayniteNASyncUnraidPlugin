@@ -1,46 +1,30 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE PLUGIN [
-  <!ENTITY name      "PlayniteNASyncUnraidPlugin">
-  <!ENTITY author    "Andrew">
-  <!ENTITY version   "2026.06.24">
-  <!ENTITY pluginURL "https://raw.githubusercontent.com/Andrewbandrew05/PlayniteNASyncUnraidPlugin/main/PlayniteNASyncUnraidPlugin.plg">
-]>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE PLUGIN>
+<PLUGIN>
 
-<PLUGIN name="&name;" author="&author;" version="&version;" pluginURL="&pluginURL;" min="6.9.0">
+  <NAME>PlayniteNASyncUnraidPlugin</NAME>
+  <AUTHOR>Andrew</AUTHOR>
+  <VERSION>2026.06.24</VERSION>
+  <SHORTDESC>Mark 1 configuration panel for Playnite storage synchronization.</SHORTDESC>
+  <LONGDESC>Provides a settings page to set the NAS target share and password for Playnite NASync.</LONGDESC>
+  <CATEGORY>Utilities</CATEGORY>
+  <MIN>6.9.0</MIN>
 
-<SHORTDESC>
-Mark 1 configuration panel for Playnite storage synchronization.
-</SHORTDESC>
+  <FILE Name="/tmp/PlayniteNASyncUnraidPlugin.txz" Run="upgradepkg --install-new">
+    <URL>https://github.com/Andrewbandrew05/PlayniteNASyncUnraidPlugin/raw/main/archive/PlayniteNASyncUnraidPlugin.txz</URL>
+  </FILE>
 
-<!-- Download and install package -->
-<FILE Name="/tmp/&name;.txz" Run="installpkg">
-  <URL>
-https://github.com/Andrewbandrew05/PlayniteNASyncUnraidPlugin/raw/main/archive/PlayniteNASyncUnraidPlugin.txz
-  </URL>
-</FILE>
+  <POSTINSTALL>
+  <INLINE>
+    mkdir -p /boot/config/plugins/PlayniteNASyncUnraidPlugin
+  </INLINE>
+  </POSTINSTALL>
 
-<!-- Ensure WebGUI plugin directory exists -->
-<FILE Name="/var/local/emhttp/plugins/&name;/">
-<INLINE>
-mkdir -p /var/local/emhttp/plugins/&name;
-</INLINE>
-</FILE>
-
-<!-- Copy plugin UI into WebGUI runtime so Settings menu picks it up -->
-<FILE Name="/var/local/emhttp/plugins/&name;/install" Run="/bin/bash">
-<INLINE>
-mkdir -p /var/local/emhttp/plugins/&name;
-cp -R /usr/local/emhttp/plugins/&name;/* /var/local/emhttp/plugins/&name;/ 2>/dev/null
-</INLINE>
-</FILE>
-
-<!-- Cleanup on removal -->
-<FILE Method="remove">
-<INLINE>
-rm -rf /usr/local/emhttp/plugins/&name;
-rm -rf /var/local/emhttp/plugins/&name;
-rm -f /tmp/&name;.txz
-</INLINE>
-</FILE>
+  <FILE Method="remove">
+  <INLINE>
+    rm -rf /usr/local/emhttp/plugins/PlayniteNASyncUnraidPlugin
+    rm -f /tmp/PlayniteNASyncUnraidPlugin.txz
+  </INLINE>
+  </FILE>
 
 </PLUGIN>
