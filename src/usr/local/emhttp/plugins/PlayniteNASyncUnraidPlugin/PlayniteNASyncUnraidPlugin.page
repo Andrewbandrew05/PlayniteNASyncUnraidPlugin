@@ -1,24 +1,32 @@
-Menu="Utilities"
+Menu="UserSettings"
 Title="Playnite NASync"
 Icon="settings"
 ---
 <?php
-// Pull existing configurations if they exist
-$plugin_config = parse_ini_file("/boot/config/plugins/PlayniteNASyncUnraidPlugin/settings.cfg");
-$current_share = $plugin_config['TARGET_SHARE'] ?? '';
-$current_password = $plugin_config['PASSWORD'] ?? '';
+$cfg_file = "/boot/config/plugins/PlayniteNASyncUnraidPlugin/settings.cfg";
+$current_share = '';
+$current_password = '';
+
+// 1. Prevent PHP warning on first load before the file is generated
+if (file_exists($cfg_file)) {
+    $plugin_config = parse_ini_file($cfg_file);
+    $current_share = $plugin_config['TARGET_SHARE'] ?? '';
+    $current_password = $plugin_config['PASSWORD'] ?? '';
+}
 
 // Handle saving when the user clicks 'Apply'
-if ($_POST['submit'] == "Apply") {
+if (isset($_POST['submit']) && $_POST['submit'] == "Apply") {
     $target_share = $_POST['target_share'];
     $password = $_POST['password'];
     
     // Create the directory on the flash drive if it doesn't exist
-    exec("mkdir -p /boot/config/plugins/PlayniteNASyncUnraidPlugin");
+    if (!is_dir("/boot/config/plugins/PlayniteNASyncUnraidPlugin")) {
+        mkdir("/boot/config/plugins/PlayniteNASyncUnraidPlugin", 0777, true);
+    }
     
     // Save to a simple config file
     $cfg_content = "TARGET_SHARE=\"$target_share\"\nPASSWORD=\"$password\"\n";
-    file_put_contents("/boot/config/plugins/PlayniteNASyncUnraidPlugin/settings.cfg", $cfg_content);
+    file_put_contents($cfg_file, $cfg_content);
     
     // Refresh local variables for immediate display
     $current_share = $target_share;
@@ -26,7 +34,7 @@ if ($_POST['submit'] == "Apply") {
 }
 ?>
 
-<form markdown="1" method="POST" action="/Settings/PlayniteNASync">
+<form markdown="1" method="POST" action="/Settings/PlayniteNASyncUnraidPlugin">
 
 ### Current Configuration
 * **Configured Target Share:** `<?=htmlspecialchars($current_share)?>`
