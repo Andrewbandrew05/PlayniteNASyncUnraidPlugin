@@ -6,6 +6,7 @@ Type="xmenu"
 <?php
 $cfg_dir = "/boot/config/plugins/PlayniteNASyncUnraidPlugin";
 $cfg_file = "$cfg_dir/settings.cfg";
+$script_output = '';
 
 // Create config directory if needed
 if (!is_dir($cfg_dir)) {
@@ -30,24 +31,40 @@ $msg_type = '';
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $settings['password'] = $_POST['password'] ?? '';
-    $settings['share1'] = $_POST['share1'] ?? '';
-    $settings['share2'] = $_POST['share2'] ?? '';
-    $settings['enabled'] = $_POST['enabled'] ?? 'no';
-    
-    // Save to INI file
-    $ini_content = "";
-    foreach ($settings as $key => $value) {
-        $ini_content .= $key . " = \"" . str_replace('"', '\\"', $value) . "\"\n";
-    }
-    
-    if (file_put_contents($cfg_file, $ini_content) !== false) {
-        @chmod($cfg_file, 0600);
-        $message = 'Settings saved successfully!';
-        $msg_type = 'success';
-    } else {
-        $message = 'Error saving settings!';
-        $msg_type = 'error';
+    if (isset($_POST['action'])) {
+        if ($_POST['action'] === 'save') {
+            $settings['password'] = $_POST['password'] ?? '';
+            $settings['share1'] = $_POST['share1'] ?? '';
+            $settings['share2'] = $_POST['share2'] ?? '';
+            $settings['enabled'] = $_POST['enabled'] ?? 'no';
+            
+            // Save to INI file
+            $ini_content = "";
+            foreach ($settings as $key => $value) {
+                $ini_content .= $key . " = \"" . str_replace('"', '\\"', $value) . "\"\n";
+            }
+            
+            if (file_put_contents($cfg_file, $ini_content) !== false) {
+                @chmod($cfg_file, 0600);
+                $message = 'Settings saved successfully!';
+                $msg_type = 'success';
+            } else {
+                $message = 'Error saving settings!';
+                $msg_type = 'error';
+            }
+        } elseif ($_POST['action'] === 'execute') {
+            // Execute bash script
+            $script = '/usr/local/emhttp/plugins/PlayniteNASyncUnraidPlugin/scripts/sync.sh';
+            if (file_exists($script)) {
+                $output = shell_exec('bash ' . escapeshellarg($script) . ' 2>&1');
+                $script_output = $output;
+                $message = 'Script executed successfully!';
+                $msg_type = 'success';
+            } else {
+                $message = 'Script not found!';
+                $msg_type = 'error';
+            }
+        }
     }
 }
 ?>
@@ -59,11 +76,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 .form-group input[type="password"] { width: 100%; max-width: 400px; padding: 8px; }
 .checkbox-group { margin: 15px 0; }
 .checkbox-group input[type="checkbox"] { margin-right: 10px; }
-.submit-btn { padding: 10px 20px; background-color: #0066cc; color: white; border: none; cursor: pointer; border-radius: 4px; }
+.button-group { margin: 20px 0; }
+.submit-btn, .execute-btn { padding: 10px 20px; margin-right: 10px; color: white; border: none; cursor: pointer; border-radius: 4px; }
+.submit-btn { background-color: #0066cc; }
 .submit-btn:hover { background-color: #0052a3; }
+.execute-btn { background-color: #28a745; }
+.execute-btn:hover { background-color: #218838; }
 .message { padding: 10px; margin-bottom: 15px; border-radius: 4px; }
 .message.success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
 .message.error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+.output-box { background-color: #f5f5f5; padding: 10px; margin-top: 15px; border-radius: 4px; border: 1px solid #ddd; max-width: 600px; max-height: 300px; overflow-y: auto; white-space: pre-wrap; font-family: monospace; }
 </style>
 
 <h2>Playnite NASync Settings</h2>
@@ -95,5 +117,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <label for="enabled">Enable Plugin</label>
     </div>
     
-    <button type="submit" class="submit-btn">Save Settings</button>
+    <div class="button-group">
+        <input type="hidden" name="action" value="save">
+        <button type="submit" class="submit-btn">Save Settings</button>
+    </div>
 </form>
+
+<form method="POST" style="margin-top: 30px;">
+    <input type="hidden" name="action" value="execute">
+    <button type="submit" class="execute-btn">Run Sync Script</button>
+</form>
+
+<?php if ($script_output): ?>
+    <div class="output-box">
+        <strong>Script Output:</strong><br/>
+        <?php echo htmlspecialchars($script_output, ENT_QUOTES); ?>
+    </div>
+<?php endif; ?>

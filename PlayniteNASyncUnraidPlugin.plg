@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE PLUGIN>
-<PLUGIN name="PlayniteNASyncUnraidPlugin" version="1.0.5" pluginURL="https://raw.githubusercontent.com/Andrewbandrew05/PlayniteNASyncUnraidPlugin/main/PlayniteNASyncUnraidPlugin.plg">
+<PLUGIN name="PlayniteNASyncUnraidPlugin" version="1.0.6" pluginURL="https://raw.githubusercontent.com/Andrewbandrew05/PlayniteNASyncUnraidPlugin/main/PlayniteNASyncUnraidPlugin.plg">
   <NAME>PlayniteNASyncUnraidPlugin</NAME>
   <AUTHOR>Andrew</AUTHOR>
-  <VERSION>1.0.5</VERSION>
+  <VERSION>1.0.6</VERSION>
   <SHORTDESC>Playnite NASync plugin for Unraid settings.</SHORTDESC>
   <LONGDESC>Provides a simple settings page for target share and password.</LONGDESC>
   <CATEGORY>Utilities</CATEGORY>
