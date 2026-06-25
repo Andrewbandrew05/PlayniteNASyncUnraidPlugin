@@ -8,17 +8,28 @@
   <LONGDESC>Provides a simple settings page for target share and password.</LONGDESC>
   <CATEGORY>Utilities</CATEGORY>
   <MIN>6.9.0</MIN>
+
   <FILE Name="/tmp/PlayniteNASyncUnraidPlugin.txz" Run="installpkg">
     <URL>https://github.com/Andrewbandrew05/PlayniteNASyncUnraidPlugin/raw/main/archive/PlayniteNASyncUnraidPlugin.txz</URL>
   </FILE>
+
   <POSTINSTALL>
   <INLINE>
     mkdir -p /boot/config/plugins/PlayniteNASyncUnraidPlugin
   </INLINE>
   </POSTINSTALL>
+
+  <FILE Name="/usr/local/emhttp/plugins/PlayniteNASyncUnraidPlugin/install" Run="/bin/bash">
+  <INLINE>
+    mkdir -p /var/local/emhttp/plugins/PlayniteNASyncUnraidPlugin
+    cp -R /usr/local/emhttp/plugins/PlayniteNASyncUnraidPlugin/* /var/local/emhttp/plugins/PlayniteNASyncUnraidPlugin/ 2>/dev/null
+  </INLINE>
+  </FILE>
+
   <FILE Method="remove">
   <INLINE>
     rm -rf /usr/local/emhttp/plugins/PlayniteNASyncUnraidPlugin
+    rm -rf /var/local/emhttp/plugins/PlayniteNASyncUnraidPlugin
     rm -f /tmp/PlayniteNASyncUnraidPlugin.txz
   </INLINE>
   </FILE>
